@@ -15,6 +15,9 @@ import model.Couleur;
 /**
  * Servlet implementation class NewGenre
  */
+
+//HERITAGE ( extends ) la classe NewCouleur herite de la classe HTTPServlet
+
 public class NewCouleur extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -49,6 +52,7 @@ public class NewCouleur extends HttpServlet {
 		request.setAttribute("message", message);
 		HttpSession session = request.getSession();
 		// Put genre in the request for the next page
+		
 		session.setAttribute("couleur", couleur);
 		getServletContext().getRequestDispatcher("/WEB-INF/newcouleur.jsp").forward(request, response);
 	}
@@ -67,7 +71,7 @@ public class NewCouleur extends HttpServlet {
 
 		try {
 			if (couleur.getCouleurId() > 0) {
-				// already exists so do an update
+				// existe dejà il faut donc la mettre à jour
 				CouleurDAO.updateCouleur(couleur);
 				message = "Couleur updated";
 			} else {

@@ -1,10 +1,16 @@
 package model;
 
+//attributs en private
+
 public class Fermentation {
 	private int fermentationId;
 	private String fermentationNom;
 	private String fermentationDescription;
 	private boolean checked;
+
+	// ( ENCAPSULATION ) protege les attributs en utilisant des privates et des protecteds dans une classe ou le package
+	// Getters and Setters ont comme fonction de recuperer et de les modifier
+	// pas de constructeur car java en crée un par défaut
 
 	public int getFermentationId() {
 		return fermentationId;
@@ -39,10 +45,13 @@ public class Fermentation {
 	}
 
 	@Override
+
+	// String toString nous sert à faire des tests comme le Sysout
+
 	public String toString() {
 		return "Fermentation [fermentationId=" + fermentationId + ", fermentationNom=" + fermentationNom
 				+ ", fermentationDescription=" + fermentationDescription + ", checked=" + checked + "]";
 	}
-	
-	
+
+
 }

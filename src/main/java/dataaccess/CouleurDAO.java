@@ -11,19 +11,25 @@ import java.util.List;
 import model.Couleur;
 
 public class CouleurDAO {
+
+	// Affiche la liste des couleurs avec ses attributs
+
 	public static List<Couleur> getAllCouleur() throws SQLException {
 		List<Couleur> couleurList = new ArrayList<>();
 
 		String q = "SELECT couleur_id, couleur_nom, couleur_description "
 				+ "FROM couleur";
 
+		// fait la requete préparé avec la base de données
+
 		try (Connection connection = ConnectionFactory.getInstance().getConnection();
 				PreparedStatement p = connection.prepareStatement(q)) {
 
-			// execute the query, and get a java resultset
+			// exécute la requête, et obtient des resultats
+
 			try (ResultSet rs = p.executeQuery()) {
 
-				// iterate through the java resultset
+				// repete les resultats 
 				while (rs.next()) {
 					Couleur Couleur = new Couleur();
 
@@ -38,6 +44,8 @@ public class CouleurDAO {
 
 		return couleurList;
 	}
+
+	// Update la couleur du produit grace à son id 
 
 	public static void updateCouleur(Couleur couleur) throws SQLException {
 		String q = "update couleur "
@@ -54,6 +62,9 @@ public class CouleurDAO {
 			p.execute();
 		}
 	}
+
+
+	// inserer une nouvelle couleur
 
 	public static void insertCouleur(Couleur Couleur) throws SQLException {
 		String q = "insert couleur values(null,?,?)";
@@ -78,6 +89,8 @@ public class CouleurDAO {
 		}
 	}
 
+	// efface couleur par son id  
+
 	public void deleteCouleurById(int CouleurId) throws SQLException {
 		String q = "Delete from couleur where couleur_id = ?";
 
@@ -88,6 +101,8 @@ public class CouleurDAO {
 		}
 	}
 
+	// recupere une nouvelle couleur grace à son id
+
 	public static Couleur getCouleurById(int couleurId) throws SQLException {
 		String q = "SELECT couleur_Id, couleur_nom, couleur_description "
 				+ "FROM couleur where couleur_id=?";
@@ -96,11 +111,13 @@ public class CouleurDAO {
 		try (Connection connection = ConnectionFactory.getInstance().getConnection();
 				PreparedStatement p = connection.prepareStatement(q)) {
 			p.setInt(1, couleurId);
-			
-			// execute the query, and get a java resultset
+
+			// exécute la requête et obtient des résultats
+
 			try (ResultSet rs = p.executeQuery()) {
 
-				// iterate through the java resultset
+				// repete les  résultats
+
 				while (rs.next()) {
 
 					couleur.setCouleurId(rs.getInt("couleur_id"));
@@ -110,7 +127,7 @@ public class CouleurDAO {
 				}
 			}
 		}
-
+		// renvoye les couleurs 
 		return couleur;
 	}
 }

@@ -9,13 +9,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+    // attributs 
 
 public class ConnectionFactory {
 	private static String dbUrl;
 	private static String userName;
 	private static String password;
 	private static ConnectionFactory connectionFactory = null;
+	
 
+	// récupere les informations ( login, password et l'adresse url ) de connection dans le fichier texte ( dbConnection.txt )
+	//et les insere dans les variables ci-dessus
+	 
 	private ConnectionFactory() {
 		URL url = getClass().getResource("/dbConnection.txt");
 		try (InputStream inputStream = url.openStream();
@@ -29,24 +34,32 @@ public class ConnectionFactory {
 				case 2 -> password = line;
 				}
 			}
+			
+			// attrape les erreurs et les affiche
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		// registering the jdbc driver here, your string to use
-		// here depends on what driver you are using.
+		
+		// chargement du driver jdbc qui sert à faire la connection avec la base de données  
+		
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
-
+       
+	// on envoye les informations de connection au driver qui se connecte à la base de données
+	
 	public Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(dbUrl, userName, password);
 	}
-
+    
+	// si la connection est vide on crée une nouvelle 
+	
 	public static ConnectionFactory getInstance() {
 		if (connectionFactory == null) {
 			connectionFactory = new ConnectionFactory();

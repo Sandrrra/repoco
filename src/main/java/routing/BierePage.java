@@ -16,8 +16,11 @@ import dataaccess.FermentationDAO;
 import model.Biere;
 
 /**
- * Servlet implementation class GamePage
+ * Servlet implementation class BeerPage
  */
+
+
+// HERITAGE ( extends ) la classe BierePage herite de la classe HTTPServlet
 public class BierePage extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -36,9 +39,18 @@ public class BierePage extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
+		// recuoere l'id du produit ( pour le modifier )
+		// sinon crée un nouveau produit
+
 		try {
+
 			String biereId = request.getParameter("biereId");
 
+
+			// si la biere id n'existe pas, on crée un nouveau objet biére
+			// sinon il récupere l'id et va recuperer les informations de la biére et les met dans un objet
+			// il récupere toutes les informations, le met dans une session et va sur la page JSP 
+			// en cas d'erreur il nous dirige sur la page erreur 
 			Biere biere = null;
 			if (biereId == null) {
 				biere = new Biere();
@@ -75,7 +87,7 @@ public class BierePage extends HttpServlet {
 		biere.setGout(request.getParameter("gout"));
 		int genreId = Integer.parseInt(request.getParameter("couleurs"));
 		biere.setCouleurId(genreId);
-		
+
 		try {
 			double degree = Double.parseDouble(request.getParameter("degree"));
 			biere.setDegree(degree);
@@ -90,7 +102,7 @@ public class BierePage extends HttpServlet {
 		}
 
 		try {
-	
+
 			LocalDate dateCommerce = LocalDate.parse(request.getParameter("dateCommerce"));
 			Date date = Date.valueOf(dateCommerce);
 			biere.setDateCommerce(date);

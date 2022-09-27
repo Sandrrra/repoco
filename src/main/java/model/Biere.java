@@ -1,6 +1,9 @@
 package model;
 
 public class Biere {
+
+	// attributs en private
+
 	private int biereId;
 	private String biereNom;
 	private String biereDescription;
@@ -13,7 +16,12 @@ public class Biere {
 	private String couleurNom;
 	private int fermentationId;
 	private String fermentationNom;
-	
+
+
+	// ( ENCAPSULATION ) protege les attributs en utilisant des privates et des protecteds dans une classe ou le package
+	// Getters and Setters ont comme fonction de recuperer et de les modifier
+	// pas de constructeur car java en crée un par défaut
+
 	public int getBiereId() {
 		return biereId;
 	}
@@ -111,6 +119,9 @@ public class Biere {
 	}
 
 	@Override
+
+	// String toString nous sert à faire des tests comme le Sysout
+
 	public String toString() {
 		return "Biere [biereId=" + biereId + ", biereNom=" + biereNom + ", biereDescription=" + biereDescription
 				+ ", prix=" + prix + ", dateCommerce=" + dateCommerce + ", pays=" + pays + ", degree=" + degree
@@ -118,6 +129,6 @@ public class Biere {
 				+ fermentationId + ", fermentationNom=" + fermentationNom + "]";
 	}
 
-	
-	
+
+
 }

@@ -11,10 +11,15 @@ import java.util.Optional;
 
 import model.Fermentation;
 
+
+//Affiche la liste de tous les produits avec ses attributs 
+
 public class FermentationDAO {
 	public static List<Fermentation> getAllFermentation() throws SQLException {
 		return getFermentation(Optional.empty(), Optional.empty());
 	}
+
+	// recupere le produit en fonction de son id 
 
 	public static Fermentation getFermentationByFermentationId(Integer fermentationId) throws SQLException {
 		Optional<String> whereClause = Optional.ofNullable("where fermentation.fermentation_id = ?");
@@ -35,19 +40,23 @@ public class FermentationDAO {
 			q += whereClause.get();
 		}
 
-		// try with resources PreparedStatement implements AutoCloseable
-		// ConnectionFactory c'est une usine qui donne une connection
-		// PreparedStatement plus securisé que statement normal (pas de SQL injection)
-		// pour envoyé au BDD la requête.
+		// essaye avec les ressources PreparedStatement implements AutoCloseable ( la connection se ferme tout seul )
+		// ConnectionFactory est une usine qui fournit une connexion.
+		// PreparedStatement est plus sûr qu'une déclaration normale (pas d'injection SQL).
+		// pour envoyer la requête à la base de données.
+
 		try (Connection connection = ConnectionFactory.getInstance().getConnection();
 				PreparedStatement p = connection.prepareStatement(q)) {
 			if (id.isPresent()) {
 				p.setInt(1, id.get());
 			}
-			// execute the query, and get a java resultset
+
+			// exécute la requête et obtient des données 
+
 			try (ResultSet rs = p.executeQuery()) {
 
-				// iterate through the java resultset
+				// Stocke les données dans un objet 
+
 				while (rs.next()) {
 					Fermentation fermentation = new Fermentation();
 
@@ -62,6 +71,8 @@ public class FermentationDAO {
 
 		return fermentationList;
 	}
+
+	// insere une nouvelle ligne dans la table fermentation
 
 	public static void insertFermentation(Fermentation fermentation) throws SQLException {
 		String q = "insert fermentation values(null,?,?)";
@@ -88,6 +99,8 @@ public class FermentationDAO {
 		}
 	}
 
+	// efface une ligne de la table fermentation grace à son id 
+
 	public void deleteFermentationById(int fermentationId) throws SQLException {
 		String q = "Delete from fermentation where fermentation_id = ?";
 
@@ -97,6 +110,8 @@ public class FermentationDAO {
 			p.execute();
 		}
 	}
+
+	// fait une mise à jour d'une ligne grace à son id  
 
 	public static void updateFermentation(Fermentation fermentation) throws SQLException {
 		String q = "update fermentation set fermentation_nom = ?,"
@@ -112,6 +127,7 @@ public class FermentationDAO {
 			p.execute();
 		}
 	}
+	// Affiche tous les element de la table bierefermentation
 
 	public static List<Fermentation> getBiereFermentation(int biereId) throws SQLException {
 		List<Fermentation> fermentationList = new ArrayList<>();
@@ -124,7 +140,8 @@ public class FermentationDAO {
 			p.setInt(1, biereId);
 			try (ResultSet rs = p.executeQuery()) {
 
-				// iterate through the java resultset
+				// répete les  résultats
+
 				while (rs.next()) {
 					Fermentation fermentation = new Fermentation();
 
@@ -137,6 +154,8 @@ public class FermentationDAO {
 				}
 			}
 		}
+
+		// renvoye la liste fermentation
 
 		return fermentationList;
 	}

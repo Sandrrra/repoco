@@ -11,10 +11,16 @@ import java.util.Optional;
 
 import model.Biere;
 
+
+// Affiche la liste de tous les produits avec ses attributs 
+
 public class BiereDAO {
 	public static List<Biere> getAllBieres() throws SQLException {
 		return getBiere(Optional.empty(), Optional.empty(), Optional.empty());
 	}
+
+
+	// recupere le produit en fonction de son id 
 
 	public static Biere getBiereById(Integer biereId) throws SQLException {
 		Optional<String> whereClause = Optional.ofNullable("where biere.biere_id = ?");
@@ -24,21 +30,32 @@ public class BiereDAO {
 				.get();
 	}
 
+	// recupere le produit en fonction de l'd de la table couleur
+
 	public static List<Biere> getBiereByCouleurId(int couleurId) throws SQLException {
 		Optional<String> whereClause = Optional.ofNullable("where biere.couleur_id = ?");
 		return getBiere(whereClause, Optional.ofNullable(couleurId), Optional.empty());
 	}
+
+
+	// recupere le produit en fonction de l'id de sa fermentation
 
 	public static List<Biere> getBiereByFermentationId(int fermentationId) throws SQLException {
 		Optional<String> whereClause = Optional.ofNullable("where bierefermentation.fermentation_id = ?");
 		return getBiere(whereClause, Optional.empty(), Optional.ofNullable(fermentationId));
 	}
 
+	// en passant par l'id couleur et de l'id fermentation 
+	// on recupere le produit  en fonction de sa couleur et de sa fermentation
+
 	public static List<Biere> getBiereByCouleurAndFermentation(int couleurId, int fermentationId) throws SQLException {
 		Optional<String> whereClause = Optional.ofNullable("where biere.couleur_id = ? "
 				+ "and bierefermentation.fermentation_id = ?");
 		return getBiere(whereClause, Optional.ofNullable(couleurId), Optional.ofNullable(fermentationId));
 	}
+
+
+	// affiche la liste de tous les produits  et fait la jointure avec toutes les autres tables  
 
 	private static List<Biere> getBiere(
 			Optional<String> whereClause,
@@ -59,10 +76,11 @@ public class BiereDAO {
 			q += whereClause.get();
 		}
 
-		// try with resources PreparedStatement implements AutoCloseable
-		// ConnectionFactory c'est une usine qui donne une connection
-		// PreparedStatement plus securisé que statement normal (pas de SQL injection)
-		// pour envoyé au BDD la requête.
+		// essaye avec les ressources PreparedStatement implemente AutoCloseable ( la connection se ferme tout seul )
+		// ConnectionFactory est une classe qui fournit une connexion à la BDD
+		// PreparedStatement est plus securisé qu'une déclaration normale (pas d'injection SQL).
+		// pour envoyer la requête à la base de données.
+
 		try (Connection connection = ConnectionFactory.getInstance().getConnection();
 				PreparedStatement p = connection.prepareStatement(q)) {
 			if (id.isPresent()) {
@@ -75,12 +93,19 @@ public class BiereDAO {
 					p.setInt(1, fermentationId.get());
 				}
 			}
-			// execute the query, and get a java resultset
+
+			// exécute la requête et obtient des données 
+
 			try (ResultSet rs = p.executeQuery()) {
 
-				// iterate through the java resultset
+				// Stocke les données dans un objet 
+
 				while (rs.next()) {
 					Biere jeux = new Biere();
+
+
+					// recupere dans la base de données les informations et les classent dans un objet
+					// crée par ue classe Modele
 
 					jeux.setBiereId(rs.getInt("biere_id"));
 					jeux.setBiereNom(rs.getString("biere_nom"));
@@ -103,8 +128,13 @@ public class BiereDAO {
 		return biereList;
 	}
 
+	//  Update le nom du produit en utilisant l'id 
+
 	public void updateNomById(int biereId, String newNom) throws SQLException {
 		String q = "update biere set biere_nom = ? where biere_id = ?";
+
+
+
 
 		try (Connection connection = ConnectionFactory.getInstance().getConnection();
 				PreparedStatement p = connection.prepareStatement(q)) {
@@ -114,6 +144,9 @@ public class BiereDAO {
 			p.execute();
 		}
 	}
+
+
+	// insere un nouveau produit dans la base de données 
 
 	public void insertBiere(Biere biere) throws SQLException {
 		String q = "insert biere values(null,?,?,?,?,?,?,?,?)";
@@ -130,6 +163,8 @@ public class BiereDAO {
 			p.setInt(8, biere.getCouleurId());
 			int affectedRows = p.executeUpdate();
 
+			// une erreur se produit si aucune ligne de la base de données est affecté   
+
 			if (affectedRows == 0) {
 				throw new SQLException("Creating bière failed, no rows affected.");
 			}
@@ -144,6 +179,8 @@ public class BiereDAO {
 		}
 	}
 
+	// efface un produit de la base de données 
+	
 	public void deleteBiereById(int biereId) throws SQLException {
 		String q = "Delete from biere where biere_id = ?";
 
@@ -153,7 +190,8 @@ public class BiereDAO {
 			p.execute();
 		}
 	}
-
+ // fait une mise à jour du produit avec son id
+	
 	public void updateBiere(Biere biere) throws SQLException {
 		String q = "update biere set biere_nom = ?,"
 				+ "biere_description=?,"
@@ -178,7 +216,8 @@ public class BiereDAO {
 			p.execute();
 		}
 	}
-
+  // efface une ligne dans la table biere fermentation en utisant l'id
+	
 	public void clearFermentation(int biereId) throws SQLException {
 		String q = "Delete from bierefermentation where biere_id = ?";
 
@@ -188,6 +227,8 @@ public class BiereDAO {
 			p.execute();
 		}
 	}
+	
+	// insere 2 id's dans biere fermentation
 
 	public void updateFermentation(int biereId, String[] fermentation) throws SQLException {
 		for (String string : fermentation) {

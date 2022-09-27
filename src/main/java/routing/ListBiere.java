@@ -18,6 +18,8 @@ import model.Biere;
 /**
  * Servlet implementation class ListJeux
  */
+
+//HERITAGE ( extends ) la classe ListBiere herite de la classe HTTPServlet
 public class ListBiere extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -84,7 +86,8 @@ public class ListBiere extends HttpServlet {
 					bieres = BiereDAO.getBiereByCouleurAndFermentation(couleurId, fermentationId);
 				}
 			}
-			// data for the following page
+			// Données pour la page suivante
+			
 			request.setAttribute("biere", bieres);
 			request.setAttribute("selected", couleurId);
 			request.setAttribute("selectedPlateforme", fermentationId);

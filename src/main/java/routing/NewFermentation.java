@@ -16,6 +16,8 @@ import dataaccess.FermentationDAO;
 /**
  * Servlet implementation class NewFermentation
  */
+//HERITAGE ( extends ) la classe NewFermentation herite de la classe HTTPServlet
+
 public class NewFermentation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
@@ -38,10 +40,10 @@ public class NewFermentation extends HttpServlet {
 
 		String fermentationId = request.getParameter("fermentationId");
 		if (fermentationId == null) {
-			// Create an empty fermentation so that the page is empty
+			// Créer une fermentation vide pour que la page soit vide 
 			fermentation = new Fermentation();
 		} else {
-			// Get the fermentation from the DAO
+			// Récupére la fermentation depuis le DAO
 			try {
 				fermentation = FermentationDAO.getFermentationByFermentationId(Integer.parseInt(fermentationId));
 			} catch (Exception e) {
@@ -49,7 +51,7 @@ public class NewFermentation extends HttpServlet {
 			}
 		}
 		HttpSession session = request.getSession();
-		// Put fermentation in the session for the next page
+		// Mettre la fermentation dans la session pour la page suivante  
 		session.setAttribute("fermentation", fermentation);
 		request.setAttribute("message", message);
 		getServletContext().getRequestDispatcher("/WEB-INF/newfermentation.jsp").forward(request, response);
@@ -69,7 +71,7 @@ public class NewFermentation extends HttpServlet {
 
 		try {
 			if (fermentation.getFermentationId() > 0) {
-				// We already have a fermentation_Id so do an update
+				// Nous avons déjà la fermentation_Id, il faut donc le mettre à jour
 				FermentationDAO.updateFermentation(fermentation);
 				message = "fermentation updated";
 			} else {
